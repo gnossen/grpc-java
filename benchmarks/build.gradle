@@ -36,6 +36,8 @@ dependencies {
 
     testCompile libraries.junit,
             libraries.mockito
+
+    runtimeOnly 'io.grpc:grpc-xds:1.28.0'
 }
 
 import net.ltgt.gradle.errorprone.CheckSeverity

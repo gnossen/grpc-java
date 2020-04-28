@@ -21,6 +21,7 @@ import io.grpc.CallOptions;
 import io.grpc.Channel;
 import io.grpc.ClientCall;
 import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 import io.grpc.Metadata;
 import io.grpc.Status;
 import io.grpc.benchmarks.Transport;
@@ -79,17 +80,7 @@ class LoadClient {
     // Create the channels
     channels = new ManagedChannel[config.getClientChannels()];
     for (int i = 0; i < config.getClientChannels(); i++) {
-      channels[i] =
-          Utils.newClientChannel(
-              Epoll.isAvailable() ?  Transport.NETTY_EPOLL : Transport.NETTY_NIO,
-              Utils.parseSocketAddress(config.getServerTargets(i % config.getServerTargetsCount())),
-              config.hasSecurityParams(),
-              config.hasSecurityParams() && config.getSecurityParams().getUseTestCa(),
-              config.hasSecurityParams()
-                  ? config.getSecurityParams().getServerHostOverride()
-                  : null,
-              Utils.DEFAULT_FLOW_CONTROL_WINDOW,
-              false);
+      channels[i] = ManagedChannelBuilder.forTarget(config.getServerTargets(i % config.getServerTargetsCount())).build();
     }
 
     // Create a stub per channel
