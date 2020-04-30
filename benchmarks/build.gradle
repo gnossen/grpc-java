@@ -16,9 +16,18 @@ jmh {
     jvmArgs = "-server -Xms2g -Xmx2g"
 }
 
+repositories {
+    maven { // The google mirror is less flaky than mavenCentral()
+        url "https://maven-central.storage-download.googleapis.com/repos/central/data/" }
+    mavenCentral()
+    mavenLocal()
+}
+
 configurations {
     alpnagent
 }
+
+def grpcVersion = '1.29.0'
 
 dependencies {
     compile project(':grpc-core'),
@@ -37,7 +46,7 @@ dependencies {
     testCompile libraries.junit,
             libraries.mockito
 
-    runtimeOnly 'io.grpc:grpc-xds:1.28.0'
+    runtimeOnly "io.grpc:grpc-xds:${grpcVersion}"
 }
 
 import net.ltgt.gradle.errorprone.CheckSeverity
